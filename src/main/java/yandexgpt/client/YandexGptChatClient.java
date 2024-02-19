@@ -17,6 +17,9 @@ import yandexgpt.dto.Prompt;
 import yandexgpt.exception.YandexGptApiException;
 
 
+/**
+ * Client implementation of {@link YandexGptApi}.
+ */
 public class YandexGptChatClient {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -31,12 +34,24 @@ public class YandexGptChatClient {
     private final YandexGptProperties properties;
 
 
+    /**
+     * Creates a new chat client.
+     *
+     * @param yandexGptApi api provider
+     * @param properties   application properties
+     */
     public YandexGptChatClient(YandexGptApi yandexGptApi,
                                YandexGptProperties properties) {
         this.yandexGptApi = yandexGptApi;
         this.properties = properties;
     }
 
+    /**
+     * Return generated content by user prompt with default parameters.
+     *
+     * @param contents user input
+     * @return generated content
+     */
     public String generateByPrompt(String contents) {
         return generate(new Prompt(contents), null, new CompletionOptions()).result().alternatives()
                 .stream()
@@ -45,6 +60,14 @@ public class YandexGptChatClient {
                 .orElse("");
     }
 
+    /**
+     * Return generated content by user request.
+     *
+     * @param prompt  user prompt
+     * @param model   LLM model
+     * @param options configuration options
+     * @return generated content
+     */
     public ChatCompletionResponse generate(Prompt prompt, String model, CompletionOptions options) {
         return this.retryTemplate.execute(ctx -> {
             ResponseEntity<ChatCompletionResponse> completionEntity = this.yandexGptApi
@@ -60,6 +83,14 @@ public class YandexGptChatClient {
         });
     }
 
+    /**
+     * Return generated content by user request for stream.
+     *
+     * @param prompt  user prompt
+     * @param model   LLM model
+     * @param options configuration options
+     * @return generated content
+     */
     public Flux<ChatCompletionResponse> generateStream(Prompt prompt, String model, CompletionOptions options) {
 
         return this.retryTemplate.execute(ctx -> this.yandexGptApi

@@ -26,6 +26,9 @@ import yandexgpt.dto.ChatCompletionResponse;
 import yandexgpt.exception.YandexGptApiException;
 
 
+/**
+ * Single class implementation of the YandexGpt Completion API.
+ */
 public class YandexGptApi {
     private static final String DATA_LOGGING_ENABLED = "x-data-logging-enabled";
     private static final Predicate<String> SSE_DONE_PREDICATE = Predicate.not(StatusConstant.ALTERNATIVE_STATUS_FINAL.name()::contains);
@@ -35,6 +38,11 @@ public class YandexGptApi {
     private final WebClient webClient;
 
 
+    /**
+     * Creates a new chat completion API.
+     *
+     * @param properties application properties
+     */
     public YandexGptApi(YandexGptProperties properties) {
 
         Assert.hasLength(properties.getApiKey(), "Property apiKey must not be empty");
